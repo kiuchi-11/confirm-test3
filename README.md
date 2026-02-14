@@ -14,9 +14,9 @@
 	php artisan migrate:fresh --seed  
 
 # 開発環境
-　　会員登録画面：http://localhost/register/step1　　
-	ログイン画面：http://localhost/login　　
-	phpMyAdmin：http://localhost:8080/　　
+　　会員登録画面：http://localhost/register/step1
+	ログイン画面：http://localhost/login
+	phpMyAdmin：http://localhost:8080/
 
 # 使用技術
 	PHP 8.1.34  
