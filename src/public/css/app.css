@@ -1,0 +1,23 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.layout {
+    min-height: 100vh;
+    background: linear-gradient(to right bottom, #e5c7ff, #ffc7f4,#ecc0db, #ecc0db, #f5c5be, #f3d4ce, #f6e5dd);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.layout__container {
+    width: 100%;
+    max-width: 450px;
+    max-height: 650px;
+    padding: 10px;
+}
