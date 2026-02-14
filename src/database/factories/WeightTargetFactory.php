@@ -3,9 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
-class UserFactory extends Factory
+class WeightTargetFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -15,9 +14,8 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('password'),
+            'user_id' => \App\Models\User::factory(),
+            'target_weight' => $this->faker->randomFloat(1, 45, 70),
         ];
     }
 }
