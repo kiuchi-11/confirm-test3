@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\WeightLogController;
-use App\Http\Controllers\IndexController;
+use App\Http\Controllers\WeightTargetController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,8 +19,8 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/weight_logs', [IndexController::class, 'index'])->name('weight_logs.index');
-    Route::get('/weight/create', [WeightLogController::class, 'create'])->name('weight.create');
-    Route::get('/weight/{id}/edit', [WeightLogController::class, 'edit'])->name('weight.edit');
-    Route::get('/target/edit', [WeightTargetController::class, 'edit'])->name('target.edit');
+    Route::resource('weight_logs', WeightLogController::class)->except(['show']);
+    Route::get('/weight_logs/goal_setting', [WeightTargetController::class, 'edit'])->name('weight_target.edit');
+    Route::put('/weight_logs/goal_setting', [WeightTargetController::class, 'update'])->name('weight_target.update');
 });
+

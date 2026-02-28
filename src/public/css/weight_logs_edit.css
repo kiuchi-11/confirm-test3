@@ -1,0 +1,91 @@
+/* カード */
+form[action*="weight_logs"] {
+    width: 520px;
+    margin: 40px auto;
+    /* 60 → 40 */
+    background: #fff;
+    padding: 32px 40px 36px;
+    /* 40 50 50 → 減らす */
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* タイトル */
+form[action*="weight_logs"] h2 {
+    margin-bottom: 22px;
+    /* 30 → 22 */
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* 各項目 */
+form[action*="weight_logs"] .form-group {
+    margin-bottom: 18px;
+    /* 22 → 18 */
+}
+
+/* ラベル */
+form[action*="weight_logs"] label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 4px;
+    /* 6 → 4 */
+}
+
+/* input */
+form[action*="weight_logs"] input,
+form[action*="weight_logs"] textarea {
+    width: 100%;
+    padding: 8px 12px;
+    /* 10 → 8 */
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: #fafafa;
+    font-size: 14px;
+}
+
+/* textarea */
+form[action*="weight_logs"] textarea {
+    min-height: 90px;
+    /* 100 → 90 */
+    resize: none;
+}
+
+/* 単位 */
+form[action*="weight_logs"] .input-unit {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    /* 8 → 6 */
+}
+
+/* ボタンエリア */
+form[action*="weight_logs"] .modal__actions {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    /* 30 → 24 */
+    margin-top: 26px;
+    /* 35 → 26 */
+}
+
+form[action*="weight_logs"] .cancel {
+    width: 120px;
+    text-align: center;
+    padding: 10px 0;
+    background: #e0e0e0;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+}
+
+form[action*="weight_logs"] .submit {
+    width: 120px;
+    padding: 10px 0;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    background: linear-gradient(90deg, #a18cd1, #fbc2eb);
+}

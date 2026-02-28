@@ -18,6 +18,5 @@ body {
 .layout__container {
     width: 100%;
     max-width: 450px;
-    max-height: 650px;
     padding: 10px;
 }

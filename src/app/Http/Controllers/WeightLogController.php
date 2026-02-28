@@ -2,82 +2,126 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\WeightLogRequest;
 use App\Models\WeightLog;
 use App\Models\WeightTarget;
+use Illuminate\Http\Request;
+use App\Http\Requests\StoreWeightLogRequest;
+use App\Http\Requests\UpdateWeightLogRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Pagination\Paginator;
 
 class WeightLogController extends Controller
 {
-    public function __construct()
+    /**
+     * 一覧 + 検索
+     */
+    public function index(Request $request)
     {
-        $this->middleware('auth');
+        $user = auth()->user();
+
+        $query = WeightLog::where('user_id', $user->id)
+                    ->orderBy('date', 'desc');
+
+        // 期間検索
+        if ($request->filled('from') && $request->filled('to')) {
+            $query->whereBetween('date', [$request->from, $request->to]);
+        }
+
+        $weightLogs = $query->paginate(8)->onEachSide(1)->withQueryString();
+
+        // 目標体重
+        $target = WeightTarget::where('user_id', $user->id)->first();
+
+        // 最新体重
+        $latestWeight = WeightLog::where('user_id', $user->id)
+                            ->orderBy('date', 'desc')
+                            ->value('weight');
+
+        // 差分
+        $difference = null;
+        if ($target && $latestWeight) {
+            $difference = round($latestWeight - $target->target_weight, 1);
+        }
+
+        return view('weight_logs.index', compact(
+            'weightLogs',
+            'target',
+            'latestWeight',
+            'difference'
+        ));
     }
 
-    public function index()
-    {
-        $weightLogs = WeightLog::where('user_id', Auth::id())
-            ->orderBy('date', 'desc')
-            ->get();
-
-        $target = WeightTarget::where('user_id', Auth::id())->first();
-
-        return view('weight_logs.index', compact('weightLogs', 'target'));
-    }
-
+    /**
+     * 登録画面
+     */
     public function create()
     {
         return view('weight_logs.create');
     }
 
-    public function store(WeightLogRequest $request)
+    /**
+     * 保存処理
+     */
+    public function store(StoreWeightLogRequest $request)
     {
         WeightLog::create([
             'user_id' => Auth::id(),
-            ...$request->validated(),
+            'date' => $request->date,
+            'weight' => $request->weight,
+            'calories' => $request->calories,
+            'exercise_time' => $request->exercise_time,
+            'exercise_content' => $request->exercise_content,
         ]);
 
-        return redirect('/weight_logs');
+        return redirect()->route('weight_logs.index');
     }
 
-    public function show($weightLogId)
+    /**
+     * 編集画面
+     */
+    public function edit($id)
     {
-        $weightLog = WeightLog::where('id', $weightLogId)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
-        return view('weight_logs.show', compact('weightLog'));
-    }
-
-    public function edit($weightLogId)
-    {
-        $weightLog = WeightLog::where('id', $weightLogId)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+        $weightLog = WeightLog::where('user_id', auth()->id())
+                        ->findOrFail($id);
 
         return view('weight_logs.edit', compact('weightLog'));
     }
 
-    public function update(WeightLogRequest $request, $weightLogId)
+    /**
+     * 更新処理
+     */
+    public function update(StoreWeightLogRequest $request, WeightLog $weightLog)
     {
-        $weightLog = WeightLog::where('id', $weightLogId)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
-        $weightLog->update($request->validated());
-
-        return redirect('/weight_logs/' . $weightLogId);
+        if ($weightLog->user_id !== Auth::id()) {
+            abort(403);
+        }
+        $weightLog->update($request->only([
+            'date',
+            'weight',
+            'calories',
+            'exercise_time',
+            'exercise_content'
+        ]));
+        return redirect()->route('weight_logs.index');
     }
 
-    public function destroy($weightLogId)
+    /**
+     * 削除処理
+     */
+    public function destroy($id)
     {
-        $weightLog = WeightLog::where('id', $weightLogId)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+        $weightLog = WeightLog::where('user_id', auth()->id())
+                        ->findOrFail($id);
 
         $weightLog->delete();
 
-        return redirect('/weight_logs');
+        return redirect()
+            ->route('weight_logs.index')
+            ->with('success', 'データを削除しました');
     }
-    
+
+    public function boot()
+    {
+        Paginator::useBootstrap();
+    }
 }
